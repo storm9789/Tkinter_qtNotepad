@@ -1,6 +1,3 @@
-# File: notebook.py
-#    http://docs.python.org/py3k/library/tkinter.ttk.html?highlight=ttk#notebook
- 
 from tkinter import *
 from tkinter import ttk
 #from demopanels import MsgPanel, SeeDismissPanel
@@ -38,6 +35,7 @@ class NotebookDemo(ttk.Frame):
         self._create_descrip_tab(nb)
         self._create_disabled_tab(nb)
         self._create_text_tab(nb)
+        self._say_neat(nb)
                         
     def _create_descrip_tab(self, nb):
         # frame to hold contentx
@@ -56,10 +54,10 @@ class NotebookDemo(ttk.Frame):
          
         lbl = ttk.Label(frame, wraplength='4i', justify=LEFT, anchor=N,
                         text=''.join(msg))
-        neatVar = StringVar()
+        neatVar = nb
         btn = ttk.Button(frame, text='New Tab', underline=0,
                          command=lambda v=neatVar: self._say_neat(v))
-        neat = ttk.Label(frame, textvariable=neatVar, name='neat')
+        neat = ttk.Label(frame, textvariable=neatVar, name='nt')
          
         # position and set resize behaviour
         lbl.grid(row=0, column=0, columnspan=2, sticky='new', pady=5)
@@ -76,22 +74,24 @@ class NotebookDemo(ttk.Frame):
         nb.add(frame, text='Description', underline=0, padding=2)
          
     def _say_neat(self, v):
-        v.set('Creating Tab')
-        # -----creates new tab---*currently breaks program(NO ERROR MESSAGE)
-        demoPanel = Frame(self, name='demo')
-        demoPanel.pack(side=TOP, fill=BOTH, expand=Y)
-        nb = ttk.Notebook(demoPanel, name='notebook')
-        frame = ttk.Frame(nb, name='descrip')
-        nb.add(frame, text='Text_Edt', underline=0, padding=2)
-        #---------------------
-        self.update()
-        self.after(500, v.set(''))
+        frame = ttk.Frame(v)
+        txt = Text(frame, wrap=WORD, width=40, height=10)
+        vscroll = ttk.Scrollbar(frame, orient=VERTICAL, command=txt.yview)
+        txt['yscroll'] = vscroll.set
+        vscroll.pack(side=RIGHT, fill=Y)
+        txt.pack(fill=BOTH, expand=Y)
+        v.add(frame, text='Text Editor')
  
     # =============================================================================
     def _create_disabled_tab(self, nb):
         # Populate the second pane. Note that the content doesn't really matter
         frame = ttk.Frame(nb)
-        nb.add(frame, text='Disabled', state='disabled')
+        txt = Text(frame, wrap=WORD, width=40, height=10)
+        vscroll = ttk.Scrollbar(frame, orient=VERTICAL, command=txt.yview)
+        txt['yscroll'] = vscroll.set
+        vscroll.pack(side=RIGHT, fill=Y)
+        txt.pack(fill=BOTH, expand=Y)
+        nb.add(frame, text='Text Editor')
  
     # =============================================================================
     def _create_text_tab(self, nb):
@@ -106,10 +106,7 @@ class NotebookDemo(ttk.Frame):
          
         # add to notebook (underline = index for short-cut character)
         nb.add(frame, text='Text Editor', underline=0)
-
-
+         
+         
 if __name__ == '__main__':
     NotebookDemo().mainloop()
-
-
-
